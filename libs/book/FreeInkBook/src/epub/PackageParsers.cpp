@@ -378,7 +378,10 @@ class NavHandler : public XmlHandler {
     if (localIs(name, "nav")) {
       ++navDepth_;
       if (!inToc_ && navDepth_ == 1) {
+        // The EPUB namespace can carry any prefix (ns1:type from some
+        // generators); fall back to the local name.
         const char* type = attrExact(atts, "epub:type");
+        if (type == nullptr) type = attrLocal(atts, "type");
         if (hasToken(type, "toc")) inToc_ = true;
       }
       return;
